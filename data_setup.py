@@ -6,12 +6,19 @@ from datasets import load_dataset
 NUM_WORKERS = min(4, os.cpu_count() or 1)
 
 train_transform = transforms.Compose([
+    transforms.RandomCrop(64, padding=4, padding_mode='reflect'),
     transforms.RandomHorizontalFlip(),
-    transforms.ToTensor()
+    transforms.TrivialAugmentWide(),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.4802, 0.4481, 0.3975],
+                          std=[0.2764, 0.2689, 0.2816]),
+    transforms.RandomErasing(p=0.25),
 ])
 
 valid_transform = transforms.Compose([
-    transforms.ToTensor()
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.4802, 0.4481, 0.3975],
+                          std=[0.2764, 0.2689, 0.2816]),
 ])
 
 class TinyImageNetDataset(Dataset):
